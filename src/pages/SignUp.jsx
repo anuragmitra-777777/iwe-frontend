@@ -1,6 +1,4 @@
-// 1. Import useEffect
 import React, { useState, useEffect } from "react";
-// 2. Import useLocation
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../features/auth/authSlice";
@@ -15,15 +13,12 @@ export default function SignUp() {
   const dispatch = useDispatch();
   const [error, setError] = useState("");
 
-  // 4. Security Check: If they didn't come from the Terms page, redirect them back!
   useEffect(() => {
     if (!location.state?.termsAccepted) {
-      // replace: true ensures they can't just hit the "Back" button to bypass this
       navigate("/legal/terms", { replace: true });
     }
   }, [location, navigate]);
 
-  // 5. Automatically set agreeTerms to true based on the secure router state
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -33,18 +28,28 @@ export default function SignUp() {
     phone: "",
     password: "",
     confirmPassword: "",
-    agreeTerms: location.state?.termsAccepted || false, 
+    agreeTerms: location.state?.termsAccepted || false,
   });
 
   const formFields = [
     { id: "firstName", label: "First Name", type: "text", required: true },
     { id: "lastName", label: "Last Name", type: "text", required: true },
-    { id: "preferredName", label: "Preferred Name", type: "text", required: true },
+    {
+      id: "preferredName",
+      label: "Preferred Name",
+      type: "text",
+      required: true,
+    },
     { id: "title", label: "Title", type: "text", required: true },
     { id: "email", label: "Email Address", type: "email", required: true },
     { id: "phone", label: "Phone Number", type: "tel", required: true },
     { id: "password", label: "Password", type: "password", required: true },
-    { id: "confirmPassword", label: "Confirm Password", type: "password", required: true },
+    {
+      id: "confirmPassword",
+      label: "Confirm Password",
+      type: "password",
+      required: true,
+    },
   ];
 
   const handleChange = (e) => {
@@ -53,7 +58,12 @@ export default function SignUp() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.firstName || !formData.lastName || !formData.email || !formData.password) {
+    if (
+      !formData.firstName ||
+      !formData.lastName ||
+      !formData.email ||
+      !formData.password
+    ) {
       setError("Please fill all required fields");
       return;
     }
@@ -61,7 +71,7 @@ export default function SignUp() {
       setError("Passwords do not match");
       return;
     }
-    // This validation will now automatically pass because state is initialized to true
+
     if (!formData.agreeTerms) {
       setError("You must agree to the Terms of Use to continue.");
       return;
@@ -75,7 +85,6 @@ export default function SignUp() {
   return (
     <AuthLayout>
       <div className="flex flex-col justify-center min-h-[calc(100vh-10rem)] w-full">
-        {/* Header Block */}
         <div className="mb-10 lg:mb-12">
           <h1 className="text-4xl font-bold mb-3 text-gray-900">Sign Up</h1>
         </div>
@@ -84,8 +93,12 @@ export default function SignUp() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-8">
             {formFields.map((field) => (
               <div key={field.id} className="space-y-4">
-                <Label htmlFor={field.id} className="text-base font-semibold text-gray-700">
-                  {field.label} {field.required && <span className="text-red-500">*</span>}
+                <Label
+                  htmlFor={field.id}
+                  className="text-base font-semibold text-gray-700"
+                >
+                  {field.label}{" "}
+                  {field.required && <span className="text-red-500">*</span>}
                 </Label>
                 <Input
                   id={field.id}

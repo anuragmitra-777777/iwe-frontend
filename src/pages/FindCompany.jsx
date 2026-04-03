@@ -6,7 +6,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-// 1. Import ArrowLeft for the custom back button
+
 import { ArrowLeft } from 'lucide-react';
 
 export default function FindCompany() {
@@ -21,11 +21,9 @@ export default function FindCompany() {
   ];
 
   return (
-    // 2. Set showBack to false to disable the layout's default back button
     <AuthLayout showBack={false}>
       <div className="flex flex-col justify-center min-h-[calc(100vh-10rem)] w-full max-w-xl mx-auto">
         
-        {/* 3. Custom Back Button placed right above the heading */}
         <button 
           onClick={() => navigate(-1)}
           className="group flex items-center text-gray-500 hover:text-gray-900 font-medium text-base mb-6 w-fit transition-colors"

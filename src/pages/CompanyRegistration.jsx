@@ -6,7 +6,6 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { useDispatch } from "react-redux";
 import { setOrganizationType } from "@/features/auth/authSlice";
-// 1. Import ArrowLeft for the custom back button
 import { ArrowLeft } from "lucide-react";
 
 export default function CompanyRegistration() {
@@ -20,25 +19,20 @@ export default function CompanyRegistration() {
       setError("Please select an option");
       return;
     }
-    
-    // Save their 'yes' or 'no' choice to Redux
+
     dispatch(setOrganizationType(isRegistered));
-    
-    // Always navigate to Find Company
+
     navigate("/onboarding/find-company");
   };
 
   return (
-    // 2. Set showBack to false to use our custom internal button
     <AuthLayout showBack={false}>
       <div className="flex flex-col justify-center min-h-[calc(100vh-10rem)] w-full max-w-xl mx-auto">
-        
-        {/* 3. Custom Back Button placed right above the heading */}
-        <button 
+        <button
           onClick={() => navigate(-1)}
           className="group flex items-center text-gray-500 hover:text-gray-900 font-medium text-base mb-6 w-fit transition-colors"
         >
-          <ArrowLeft className="w-5 h-5 mr-2 transition-transform group-hover:-translate-x-1" /> 
+          <ArrowLeft className="w-5 h-5 mr-2 transition-transform group-hover:-translate-x-1" />
           Back
         </button>
 
@@ -70,7 +64,11 @@ export default function CompanyRegistration() {
               className="space-y-4 pt-2"
             >
               <div className="flex items-center space-x-4">
-                <RadioGroupItem value="yes" id="yes" className="scale-125 origin-left" />
+                <RadioGroupItem
+                  value="yes"
+                  id="yes"
+                  className="scale-125 origin-left"
+                />
                 <Label
                   htmlFor="yes"
                   className="font-semibold text-gray-800 text-lg cursor-pointer"
@@ -80,7 +78,11 @@ export default function CompanyRegistration() {
               </div>
 
               <div className="flex items-center space-x-4">
-                <RadioGroupItem value="no" id="no" className="scale-125 origin-left" />
+                <RadioGroupItem
+                  value="no"
+                  id="no"
+                  className="scale-125 origin-left"
+                />
                 <Label
                   htmlFor="no"
                   className="font-semibold text-gray-800 text-lg cursor-pointer"
@@ -90,7 +92,9 @@ export default function CompanyRegistration() {
               </div>
             </RadioGroup>
 
-            {error && <p className="text-red-500 text-base font-medium mt-2">{error}</p>}
+            {error && (
+              <p className="text-red-500 text-base font-medium mt-2">{error}</p>
+            )}
           </div>
 
           <Button

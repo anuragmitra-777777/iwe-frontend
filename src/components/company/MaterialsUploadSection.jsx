@@ -3,8 +3,6 @@ import { Label } from '@/components/ui/label';
 import { Plus, X, UploadCloud } from 'lucide-react';
 
 export default function MaterialsUploadSection() {
-  // State to track the array of upload rows. 
-  // 'file' will hold the actual File object chosen by the user.
   const [materials, setMaterials] = useState([{ id: Date.now(), file: null }]);
 
   // Add a new empty upload row
@@ -12,7 +10,7 @@ export default function MaterialsUploadSection() {
     setMaterials([...materials, { id: Date.now(), file: null }]);
   };
 
-  // Handle the file selection from the hidden HTML input
+  // Handle the file selection
   const handleFileChange = (id, selectedFile) => {
     if (selectedFile) {
       setMaterials(materials.map(mat => 
@@ -39,11 +37,8 @@ export default function MaterialsUploadSection() {
         {materials.map((mat) => (
           <div key={mat.id} className="flex items-center gap-3 w-full max-w-[600px]">
             
-            {/* Custom File Upload Container */}
             <div className="relative flex border border-gray-300 hover:border-iwePrimary rounded-lg overflow-hidden h-14 flex-1 shadow-sm transition-colors group cursor-pointer bg-white">
               
-              {/* 1. HIDDEN NATIVE FILE INPUT: 
-                  Stretches over the whole box invisibly to capture clicks natively. */}
               <input 
                 type="file" 
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
@@ -51,20 +46,18 @@ export default function MaterialsUploadSection() {
                 title="Click to upload a file"
               />
               
-              {/* 2. THE "BUTTON" SIDE */}
               <div className="bg-iwePrimary hover:bg-iwePrimaryHover text-white border-r border-gray-500 px-6 sm:px-8 text-base flex items-center justify-center font-bold transition-colors shrink-0 gap-2">
                 <UploadCloud className="w-5 h-5 text-white group-hover:text-iwePrimary transition-colors" />
                 Upload File
               </div>
               
-              {/* 3. THE "FILE NAME" SIDE */}
               <div className={`flex-1 px-4 flex items-center text-base truncate ${mat.file ? 'text-gray-900 font-medium' : 'text-gray-400'}`}>
                 {mat.file ? mat.file.name : "No file selected"}
               </div>
 
             </div>
 
-            {/* Delete button (only show if there is more than 1 row) */}
+            {/* Delete button */}
             {materials.length > 1 && (
               <button 
                 type="button" 

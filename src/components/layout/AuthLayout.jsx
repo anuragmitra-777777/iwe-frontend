@@ -23,7 +23,6 @@ export default function AuthLayout({ children, showBack = false }) {
       </div>
 
       {/* Right Side - Scrollable */}
-      {/* 1. REDUCED HORIZONTAL PADDING HERE: Changed lg:p-16 to lg:px-10 lg:py-16 */}
       <div className="w-full lg:w-[55%] xl:w-[60%] h-full flex flex-col items-center px-6 py-8 sm:px-10 md:px-12 lg:px-10 lg:py-16 relative overflow-y-auto scroll-smooth custom-scrollbar">
         
         {showBack && (
@@ -36,7 +35,6 @@ export default function AuthLayout({ children, showBack = false }) {
           </button>
         )}
 
-        {/* 2. INCREASED MAX WIDTH HERE: Changed max-w-xl to max-w-3xl */}
         <div className="flex-1 flex flex-col w-full max-w-3xl mt-14 sm:mt-10 lg:mt-0 pb-8">
           {children}
         </div>

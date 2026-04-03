@@ -26,14 +26,14 @@ export default function Login() {
     <AuthLayout>
       <div className="flex flex-col justify-center min-h-[calc(100vh-10rem)] w-full max-w-xl mx-auto">
         
-        {/* Header Block */}
+        
         <div className="mb-10 lg:mb-12">
           <h1 className="text-4xl text-center lg:text-center font-bold text-gray-900 mb-3">
             Integrated Warfighter <br />Ecosystem
           </h1>
         </div>
 
-        {/* Form Block */}
+        
         <form className="space-y-8" onSubmit={handleSubmit}>
           <h2 className="text-xl text-center lg:text-left text-gray-600 font-medium">
             Sign in
@@ -87,7 +87,7 @@ export default function Login() {
           </Button>
         </form>
 
-        {/* Footer Block */}
+        
         <div className="mt-10 text-center text-base text-gray-600">
           <p className="mb-2">
             By continuing, you agree to our{" "}

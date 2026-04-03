@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { setOrganizationType, selectOrganizationType } from '../features/auth/authSlice';
 import { ArrowLeft } from 'lucide-react';
 
-// Import our newly organized custom SVG components
 import LiaisonIcon from '../components/icons/LiaisonIcon';
 import BusinessIcon from '../components/icons/BusinessIcon';
 
@@ -16,7 +15,6 @@ export default function OrganizationSelection() {
   const saved = useSelector(selectOrganizationType) || null;
   const [selected, setSelected] = useState(saved);
 
-  // Added "disabled" property to control access
   const options = [
     { value: 'liaison', label: 'I am representing a Liaison Organization', icon: LiaisonIcon, disabled: true },
     { value: 'business', label: 'I am representing a Business', icon: BusinessIcon, disabled: false },

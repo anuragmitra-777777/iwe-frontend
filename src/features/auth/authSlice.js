@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  // 1. Updated to match all SignUp.jsx fields
   userData: {
     firstName: '',
     lastName: '',
@@ -11,11 +10,8 @@ const initialState = {
     title: '',
   },
   
-  // Holds 'liaison', 'business' (from select-org) 
-  // AND 'yes', 'no' (from company-registration)
   organizationType: null, 
 
-  // 2. Updated to match ALL CompanyInfo.jsx fields exactly
   companyData: {
     companyName: '',
     website: '',
@@ -49,7 +45,6 @@ const authSlice = createSlice({
       state.userData = { ...state.userData, ...action.payload };
     },
 
-    // 3. Removed the strict array check so 'yes' and 'no' are accepted
     setOrganizationType: (state, action) => {
       state.organizationType = action.payload;
     },

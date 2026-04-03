@@ -2,36 +2,42 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 
+import logo from '@/assets/images/logo.png';
+import soldier from '@/assets/images/soldier-wireframe.png';
+
 export default function AuthLayout({ children, showBack = false }) {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row font-sans">
-      {/* Left Side - Graphic & Logo */}
-      <div className="hidden lg:flex lg:w-[45%] bg-black text-white p-12 relative flex-col overflow-hidden">
-        <div className="z-10 text-4xl font-bold flex items-center gap-2 tracking-widest">
-          <span className="text-white">() IWE</span>
+    <div className="h-screen flex flex-col lg:flex-row font-sans overflow-hidden bg-white">
+
+      {/* Left Side - Fixed */}
+      <div className="hidden lg:flex lg:w-[45%] xl:w-[40%] h-full bg-[#0a0a0a] text-white p-12 lg:p-16 relative flex-col overflow-hidden shadow-2xl z-10">
+        <div className="z-10 flex items-center">
+          <img src={logo} alt="IWE logo" className="h-10 lg:h-12 object-contain" />
         </div>
-        
-        {/* Replace this div with your actual image tag */}
-        <div className="absolute bottom-0 right-0 left-0 top-32 bg-[url('/src/assets/images/soldier-wireframe.png')] bg-contain bg-no-repeat bg-bottom opacity-90 mix-blend-screen pointer-events-none"></div>
+        <img 
+          src={soldier} alt="Soldier Graphic"
+          className="scale-150 absolute z-0 pointer-events-none mix-blend-screen opacity-[0.85] max-w-none w-[150%] bottom-[-18%] left-[-20%]"
+        />
       </div>
 
-      {/* Right Side - Dynamic Content */}
-      <div className="w-full lg:w-[55%] bg-white flex flex-col justify-center items-center p-8 md:p-16 lg:p-24 relative overflow-y-auto">
+      {/* Right Side - Scrollable */}
+      {/* 1. REDUCED HORIZONTAL PADDING HERE: Changed lg:p-16 to lg:px-10 lg:py-16 */}
+      <div className="w-full lg:w-[55%] xl:w-[60%] h-full flex flex-col items-center px-6 py-8 sm:px-10 md:px-12 lg:px-10 lg:py-16 relative overflow-y-auto scroll-smooth custom-scrollbar">
         
-        {/* Optional Global Back Button */}
         {showBack && (
           <button 
-            onClick={() => navigate(-1)}
-            className="absolute top-8 left-8 lg:top-16 lg:left-16 flex items-center text-iwePrimary hover:text-iwePrimaryHover font-medium text-sm transition-colors"
+            aria-label="Go back" onClick={() => navigate(-1)}
+            className="group absolute top-6 left-6 sm:top-8 sm:left-8 lg:top-12 lg:left-10 flex items-center text-gray-500 hover:text-gray-900 font-medium text-sm sm:text-base transition-all duration-200"
           >
-            <ArrowLeft className="w-4 h-4 mr-2" />
+            <ArrowLeft className="w-4 h-4 mr-2 transition-transform duration-200 group-hover:-translate-x-1" /> 
             Back
           </button>
         )}
 
-        <div className="w-full max-w-md">
+        {/* 2. INCREASED MAX WIDTH HERE: Changed max-w-xl to max-w-3xl */}
+        <div className="flex-1 flex flex-col w-full max-w-3xl mt-14 sm:mt-10 lg:mt-0 pb-8">
           {children}
         </div>
       </div>

@@ -1,25 +1,44 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  // Data from SignUp page
+  // 1. Updated to match all SignUp.jsx fields
   userData: {
     firstName: '',
     lastName: '',
+    preferredName: '',
     email: '',
     phone: '',
     title: '',
   },
-  // Data from Organization Selection
-  organizationType: null, // 'liaison' or 'business'
-  // Data from Company Info page
+  
+  // Holds 'liaison', 'business' (from select-org) 
+  // AND 'yes', 'no' (from company-registration)
+  organizationType: null, 
+
+  // 2. Updated to match ALL CompanyInfo.jsx fields exactly
   companyData: {
     companyName: '',
+    website: '',
     ueid: '',
     cageCode: '',
-    website: '',
-    classification: 'small',
+    ein: '',
+    founder: '',
+    foundedYear: '',
+    stateReg: '',
+    regCode: '',
+    state: '',
+    address: '',
+    city: '',
+    zip: '',
+    classification: '',
     programs: [],
+    linkedin: '',
+    facebook: '',
+    youtube: '',
+    instagram: ''
   },
+  isLoading: false,
+  error: null,
 };
 
 const authSlice = createSlice({
@@ -29,15 +48,44 @@ const authSlice = createSlice({
     setUserData: (state, action) => {
       state.userData = { ...state.userData, ...action.payload };
     },
+
+    // 3. Removed the strict array check so 'yes' and 'no' are accepted
     setOrganizationType: (state, action) => {
       state.organizationType = action.payload;
     },
+
     setCompanyData: (state, action) => {
       state.companyData = { ...state.companyData, ...action.payload };
     },
-    resetOnboarding: () => initialState,
-  }
+
+    setPrograms: (state, action) => {
+      state.companyData.programs = action.payload;
+    },
+
+    setLoading: (state, action) => {
+      state.isLoading = action.payload;
+    },
+
+    setError: (state, action) => {
+      state.error = action.payload;
+    },
+
+    resetOnboarding: () => ({ ...initialState }),
+  },
 });
 
-export const { setUserData, setOrganizationType, setCompanyData, resetOnboarding } = authSlice.actions;
+export const {
+  setUserData,
+  setOrganizationType,
+  setCompanyData,
+  setPrograms,
+  setLoading,
+  setError,
+  resetOnboarding,
+} = authSlice.actions;
+
+export const selectUserData = (state) => state.auth.userData;
+export const selectCompanyData = (state) => state.auth.companyData;
+export const selectOrganizationType = (state) => state.auth.organizationType;
+
 export default authSlice.reducer;

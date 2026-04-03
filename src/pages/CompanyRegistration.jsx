@@ -1,51 +1,107 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import AuthLayout from '../components/layout/AuthLayout';
-import { Button } from '@/components/ui/button';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import AuthLayout from "../components/layout/AuthLayout";
+import { Button } from "@/components/ui/button";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { useDispatch } from "react-redux";
+import { setOrganizationType } from "@/features/auth/authSlice";
+// 1. Import ArrowLeft for the custom back button
+import { ArrowLeft } from "lucide-react";
 
 export default function CompanyRegistration() {
   const [isRegistered, setIsRegistered] = useState(null);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleContinue = () => {
-    if (isRegistered === 'yes') {
-      navigate('/find-company');
-    } else if (isRegistered === 'no') {
-      navigate('/company-info'); // Or wherever manual entry goes
+    if (!isRegistered) {
+      setError("Please select an option");
+      return;
     }
+    
+    // Save their 'yes' or 'no' choice to Redux
+    dispatch(setOrganizationType(isRegistered));
+    
+    // Always navigate to Find Company
+    navigate("/onboarding/find-company");
   };
 
   return (
-    <AuthLayout showBack={true}>
-      <h1 className="text-2xl font-semibold mb-2 text-gray-900">Company Registration Info</h1>
-      <p className="text-sm text-gray-500 mb-8">
-        Let's find your company or create it in our system.
-      </p>
-
-      <div className="mb-8 space-y-4">
-        <Label className="text-base font-semibold">Is your company registered with SAM.gov?</Label>
+    // 2. Set showBack to false to use our custom internal button
+    <AuthLayout showBack={false}>
+      <div className="flex flex-col justify-center min-h-[calc(100vh-10rem)] w-full max-w-xl mx-auto">
         
-        <RadioGroup value={isRegistered} onValueChange={setIsRegistered} className="space-y-3 pt-2">
-          <div className="flex items-center space-x-3">
-            <RadioGroupItem value="yes" id="yes" className="text-iwePrimary border-gray-400" />
-            <Label htmlFor="yes" className="font-normal text-gray-700 text-base">Yes</Label>
-          </div>
-          <div className="flex items-center space-x-3">
-            <RadioGroupItem value="no" id="no" className="text-iwePrimary border-gray-400" />
-            <Label htmlFor="no" className="font-normal text-gray-700 text-base">No</Label>
-          </div>
-        </RadioGroup>
-      </div>
+        {/* 3. Custom Back Button placed right above the heading */}
+        <button 
+          onClick={() => navigate(-1)}
+          className="group flex items-center text-gray-500 hover:text-gray-900 font-medium text-base mb-6 w-fit transition-colors"
+        >
+          <ArrowLeft className="w-5 h-5 mr-2 transition-transform group-hover:-translate-x-1" /> 
+          Back
+        </button>
 
-      <Button 
-        onClick={handleContinue}
-        disabled={!isRegistered}
-        className="w-full md:w-32 bg-iwePrimary hover:bg-iwePrimaryHover text-white h-11 text-base font-semibold disabled:opacity-50"
-      >
-        Continue
-      </Button>
+        <h1 className="text-4xl font-bold mb-3 text-gray-900">
+          Company Registration Info
+        </h1>
+        <p className="text-base text-gray-500 mb-10 font-medium">
+          Let's find your company or create it in our system.
+        </p>
+
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleContinue();
+          }}
+          className="w-full"
+        >
+          <div className="mb-12 space-y-6">
+            <Label className="text-xl font-bold text-gray-900">
+              Is your company registered with SAM.gov?
+            </Label>
+
+            <RadioGroup
+              value={isRegistered}
+              onValueChange={(val) => {
+                setIsRegistered(val);
+                setError("");
+              }}
+              className="space-y-4 pt-2"
+            >
+              <div className="flex items-center space-x-4">
+                <RadioGroupItem value="yes" id="yes" className="scale-125 origin-left" />
+                <Label
+                  htmlFor="yes"
+                  className="font-semibold text-gray-800 text-lg cursor-pointer"
+                >
+                  Yes
+                </Label>
+              </div>
+
+              <div className="flex items-center space-x-4">
+                <RadioGroupItem value="no" id="no" className="scale-125 origin-left" />
+                <Label
+                  htmlFor="no"
+                  className="font-semibold text-gray-800 text-lg cursor-pointer"
+                >
+                  No
+                </Label>
+              </div>
+            </RadioGroup>
+
+            {error && <p className="text-red-500 text-base font-medium mt-2">{error}</p>}
+          </div>
+
+          <Button
+            type="submit"
+            disabled={!isRegistered}
+            className="w-full sm:w-40 bg-iwePrimary hover:bg-iwePrimaryHover text-white h-14 text-lg font-bold transition-all shadow-sm"
+          >
+            Continue
+          </Button>
+        </form>
+      </div>
     </AuthLayout>
   );
 }

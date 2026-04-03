@@ -1,80 +1,118 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { setUserData } from '../features/auth/authSlice';
-import AuthLayout from '../components/layout/AuthLayout';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
+// 1. Import useEffect
+import React, { useState, useEffect } from "react";
+// 2. Import useLocation
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setUserData } from "../features/auth/authSlice";
+import AuthLayout from "../components/layout/AuthLayout";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 
 export default function SignUp() {
   const navigate = useNavigate();
+  const location = useLocation(); // 3. Initialize useLocation
   const dispatch = useDispatch();
+  const [error, setError] = useState("");
 
-  // 1. Local state to hold form inputs while typing
+  // 4. Security Check: If they didn't come from the Terms page, redirect them back!
+  useEffect(() => {
+    if (!location.state?.termsAccepted) {
+      // replace: true ensures they can't just hit the "Back" button to bypass this
+      navigate("/legal/terms", { replace: true });
+    }
+  }, [location, navigate]);
+
+  // 5. Automatically set agreeTerms to true based on the secure router state
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    preferredName: '',
-    title: '',
-    email: '',
-    phone: '',
-    password: '',
-    confirmPassword: ''
+    firstName: "",
+    lastName: "",
+    preferredName: "",
+    title: "",
+    email: "",
+    phone: "",
+    password: "",
+    confirmPassword: "",
+    agreeTerms: location.state?.termsAccepted || false, 
   });
 
-  // 2. Handle input changes
+  const formFields = [
+    { id: "firstName", label: "First Name", type: "text", required: true },
+    { id: "lastName", label: "Last Name", type: "text", required: true },
+    { id: "preferredName", label: "Preferred Name", type: "text", required: true },
+    { id: "title", label: "Title", type: "text", required: true },
+    { id: "email", label: "Email Address", type: "email", required: true },
+    { id: "phone", label: "Phone Number", type: "tel", required: true },
+    { id: "password", label: "Password", type: "password", required: true },
+    { id: "confirmPassword", label: "Confirm Password", type: "password", required: true },
+  ];
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
-  // 3. Handle submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    // Save to global Redux store (excluding passwords for security)
-    dispatch(setUserData({
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      email: formData.email,
-      phone: formData.phone,
-      title: formData.title
-    }));
+    if (!formData.firstName || !formData.lastName || !formData.email || !formData.password) {
+      setError("Please fill all required fields");
+      return;
+    }
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+    // This validation will now automatically pass because state is initialized to true
+    if (!formData.agreeTerms) {
+      setError("You must agree to the Terms of Use to continue.");
+      return;
+    }
 
-    // Move to next step
-    navigate('/verify');
+    setError("");
+    dispatch(setUserData(formData));
+    navigate("/auth/verify");
   };
 
   return (
     <AuthLayout>
-      <div className="mb-8">
-        <h1 className="text-2xl font-semibold mb-2 text-gray-900">Sign Up</h1>
-        <p className="text-sm text-gray-500">
-          Already have an account? <Link to="/login" className="text-iwePrimary font-semibold hover:underline">Sign in</Link>
-        </p>
-      </div>
-
-      <form className="space-y-6" onSubmit={handleSubmit}>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-2">
-            <Label htmlFor="firstName">First Name <span className="text-red-500">*</span></Label>
-            <Input id="firstName" value={formData.firstName} onChange={handleChange} required className="h-11" />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="lastName">Last Name <span className="text-red-500">*</span></Label>
-            <Input id="lastName" value={formData.lastName} onChange={handleChange} required className="h-11" />
-          </div>
-          {/* ... Add value and onChange to the rest of your inputs similarly ... */}
-          <div className="space-y-2">
-            <Label htmlFor="email">Email Address <span className="text-red-500">*</span></Label>
-            <Input id="email" type="email" value={formData.email} onChange={handleChange} required className="h-11" />
-          </div>
+      <div className="flex flex-col justify-center min-h-[calc(100vh-10rem)] w-full">
+        {/* Header Block */}
+        <div className="mb-10 lg:mb-12">
+          <h1 className="text-4xl font-bold mb-3 text-gray-900">Sign Up</h1>
         </div>
 
-        <Button type="submit" className="w-full md:w-32 bg-iwePrimary hover:bg-iwePrimaryHover text-white h-11 mt-4">
-          Submit
-        </Button>
-      </form>
+        <form className="space-y-10" onSubmit={handleSubmit}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-8">
+            {formFields.map((field) => (
+              <div key={field.id} className="space-y-4">
+                <Label htmlFor={field.id} className="text-base font-semibold text-gray-700">
+                  {field.label} {field.required && <span className="text-red-500">*</span>}
+                </Label>
+                <Input
+                  id={field.id}
+                  type={field.type}
+                  value={formData[field.id]}
+                  onChange={handleChange}
+                  required={field.required}
+                  className="h-14 px-4 text-base md:text-base border-gray-300 focus-visible:ring-iwePrimary transition-all"
+                />
+              </div>
+            ))}
+          </div>
+
+          {error && (
+            <p className="text-red-500 text-base font-medium">{error}</p>
+          )}
+
+          <div className="pb-4">
+            <Button
+              type="submit"
+              className="w-full md:w-40 bg-iwePrimary hover:bg-iwePrimaryHover text-white h-14 text-lg font-bold transition-all active:scale-[0.98] shadow-sm"
+            >
+              Submit
+            </Button>
+          </div>
+        </form>
+      </div>
     </AuthLayout>
   );
 }

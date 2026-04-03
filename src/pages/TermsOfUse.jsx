@@ -16,10 +16,7 @@ export default function TermsOfUse() {
 
   return (
     <AuthLayout>
-      {/* CHANGED: Replaced h-full min-h-[...] with a strict h-[calc(100vh-8rem)].
-        This locks the container to the viewport, forcing the middle section to scroll.
-      */}
-      <div className="flex flex-col h-[calc(100vh-8rem)]">
+      <div className="flex flex-col h-[calc(100vh-10rem)] overflow-hidden">
         <h1 className="text-3xl font-bold mb-6 text-gray-900 shrink-0">
           Terms of Use
         </h1>

@@ -53,7 +53,7 @@ export default function OrganizationSelection() {
               <button
                 key={opt.value}
                 type="button"
-                disabled={isDisabled} // Native HTML disabled attribute
+                disabled={isDisabled}
                 onClick={() => !isDisabled && setSelected(opt.value)}
                 className={`relative flex flex-col items-center justify-center p-10 border-2 rounded-xl transition-all duration-200 
                   ${isDisabled 

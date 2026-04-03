@@ -86,12 +86,15 @@ export default function CompanyInfo() {
 
   const handleInitialSubmit = (e) => {
     e.preventDefault();
-    const hasInvalidMaterials = form.materials.some(mat => !mat.type || !mat.fileName);
-    
-    if (hasInvalidMaterials) {
-      alert("Please ensure all your Material Upload rows have a Document Type selected and a file attached.");
+    const hasPartiallyFilledMaterials = form.materials.some(
+      mat => (mat.type && !mat.fileName) || (!mat.type && mat.fileName)
+    );
+
+    if (hasPartiallyFilledMaterials) {
+      alert("You have an incomplete material upload. Please make sure both the Document Type and the File are selected");
       return;
     }
+
     setShowConfirmModal(true);
   };
 
@@ -100,10 +103,12 @@ export default function CompanyInfo() {
 
     const safeReduxFormData = {
       ...form,
-      materials: form.materials.map((mat) => ({
-        type: mat.type,
-        fileName: mat.fileName,
-      })),
+      materials: form.materials
+        .filter(mat => mat.type && mat.fileName) 
+        .map(mat => ({
+          type: mat.type,
+          fileName: mat.fileName
+        }))
     };
 
     dispatch(setCompanyData(safeReduxFormData));

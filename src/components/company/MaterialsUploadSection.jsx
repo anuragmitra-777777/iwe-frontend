@@ -64,10 +64,19 @@ export default function MaterialsUploadSection({ form, setForm }) {
   };
 
   const removeMaterialRow = (id) => {
-    setForm((prev) => ({
-      ...prev,
-      materials: prev.materials.filter((mat) => mat.id !== id),
-    }));
+    setForm((prev) => {
+      if (prev.materials.length === 1) {
+        return {
+          ...prev,
+          materials: [{ id: Date.now(), type: "", fileName: "", file: null }],
+        };
+      }
+
+      return {
+        ...prev,
+        materials: prev.materials.filter((mat) => mat.id !== id),
+      };
+    });
   };
 
   return (
@@ -138,11 +147,12 @@ export default function MaterialsUploadSection({ form, setForm }) {
             </div>
 
             {/* Delete Button */}
-            {materials.length > 1 && (
+            {(materials.length > 1 || mat.type || mat.fileName) && (
               <button
                 type="button"
                 onClick={() => removeMaterialRow(mat.id)}
                 className="text-gray-400 hover:text-red-500 transition-colors p-2 shrink-0 bg-white rounded-full hover:bg-red-50 self-center"
+                title="Clear row"
               >
                 <X className="w-5 h-5" />
               </button>
